@@ -1,6 +1,7 @@
 const userModel = require('../models/users');
 const bcrypt = require('bcrypt');
 const dbPool = require('../config/database');
+const jwt = require('jsonwebtoken');
 
 // Mendapatkan semua pengguna
 const getAllUser = async (req, res) => {
@@ -78,49 +79,53 @@ const registerUser = async (req, res) => {
 
 //Login
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-
-    // Validasi input
-    if (!email || !password) {
-        return res.status(400).json({
-            message: 'Email dan password harus diisi',
-        });
-    }
-
     try {
-        // Query untuk mendapatkan user berdasarkan email
-        const [rows] = await dbPool.execute('SELECT * FROM users WHERE email = ?', [email]);
+        const { email, password } = req.body;  // Mengambil email dan password dari body request
 
-        if (rows.length === 0) {
-            return res.status(404).json({
-                message: 'User tidak ditemukan',
-            });
+        // Cek jika email atau password tidak ada
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email dan password harus diisi!' });
         }
 
-        const user = rows[0];
+        // Mengambil pengguna berdasarkan email
+        const user = await userModel.getUserByEmail(email);
 
-        // Bandingkan password yang diinput dengan password yang di-hash di database
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            return res.status(400).json({
-                message: 'Password salah',
-            });
+        // Cek jika pengguna tidak ditemukan
+        if (!user) {
+            return res.status(404).json({ message: 'Pengguna tidak ditemukan!' });
         }
 
-        res.json({
-            message: 'Login berhasil',
-            data: {
-                id: user.id,
+        // Validasi password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: 'Password salah!' });
+        }
+
+        // Buat payload untuk JWT
+        const payload = {
+            id_users: user.id_users,
+            roles: user.roles,
+        };
+
+        // Buat token JWT
+        const token = jwt.sign(payload, process.env.JWT_SECRET || 'defaultsecret', { expiresIn: '1h' });
+
+        // Kirim token ke klien
+        res.status(200).json({
+            message: 'Login berhasil!',
+            token: `Bearer ${token}`, // Kirim token dengan format "Bearer <token>"
+            users: {
+                id: user.id_users,
                 name: user.name,
                 email: user.email,
-            },
+                roles: user.roles,
+                avatar: user.avatar || null
+            }
         });
+      
     } catch (error) {
-        res.status(500).json({
-            message: 'Server error',
-            serverMessage: error.message,
-        });
+        console.error('Error saat proses login:', error);
+        res.status(500).json({ message: 'Terjadi kesalahan pada server!' });
     }
 };
 
@@ -142,24 +147,36 @@ const logoutUser = (req, res) => {
 
 // update user
 const updateUser = async (req, res) => {
-    const {idUser} = req.params;
-    const {body} = req;
+    const idUser = req.params.idUser;
+    const body = req.body;
+    const file = req.file;
+
+    if (!body.name && !body.email && !body.password && !file) {
+        return res.status(400).json({
+            message: 'Harap isi setidaknya satu data yang ingin diubah.'
+        });
+    }
+
     try {
+        if (file) {
+            body.avatar = file.filename;
+        }
+
         await userModel.updateUser(body, idUser);
-        res.json ({
-            message : 'update berhasil',
-            data : {
-                id : idUser,
-                ...body},
-    
-        })
+
+        res.status(200).json({
+            message: 'User berhasil diperbarui',
+            data: body
+        });
     } catch (error) {
+        console.error('Error saat mengupdate user:', error); // Tambahkan log ini
         res.status(500).json({
-            message: 'server error',
-            serverMessage: error.message, 
+            message: 'Terjadi kesalahan pada server.',
+            serverMessage: error.message
         });
     }
 };
+
 
 //Delete User
 const deleteUser = async (req, res) => {

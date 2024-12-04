@@ -8,17 +8,21 @@ const getAllUser = () =>{
 
 //untuk menampilkan user sesuai id
 const getUserById = (idUser) => {
-    const sqlQuery = `SELECT * FROM users WHERE id = '${idUser}'`;
+    const sqlQuery = `SELECT * FROM users WHERE id_users = '${idUser}'`;
     
     return dbPool.execute(sqlQuery);
 };
 
 // Fungsi untuk mendapatkan pengguna berdasarkan email
 const getUserByEmail = async (email) => {
-    const query = 'SELECT * FROM users WHERE email = ?';
-    return dbPool.execute(query, [email]).then(([rows]) => rows);
+    try {
+        const query = 'SELECT * FROM users WHERE email = ?';
+        const [users] = await dbPool.execute(query, [email]);  // Pastikan email adalah string
+        return users[0];  
+    } catch (error) {
+        return rows.length > 0 ? rows : [];
+    }
 };
-
 // Fungsi untuk membuat pengguna baru atau Register
 const registerUser = async (userData) => {
     const { name, email, password } = userData;
@@ -27,10 +31,37 @@ const registerUser = async (userData) => {
 };
 
 //untuk mengupdate Users
-const updateUser = (body, idUser) =>{
-    const sqlQuery = `UPDATE users SET name = '${body.name}', email = '${body.email}', password = '${body.password}', avatar ='${body.avatar}', avatar_google = '${body.avatar_google}' WHERE id = '${idUser}'`;
+const updateUser = async (body, idUser) => {
+    // Buat array untuk menyimpan kolom yang akan diperbarui
+    let fieldsToUpdate = [];
 
-    return dbPool.execute(sqlQuery);
+    if (body.name) {
+        fieldsToUpdate.push(`name = '${body.name}'`);
+    }
+    if (body.email) {
+        fieldsToUpdate.push(`email = '${body.email}'`);
+    }
+    if (body.password) {
+        fieldsToUpdate.push(`password = '${body.password}'`);
+    }
+    if (body.avatar) {
+        fieldsToUpdate.push(`avatar = '${body.avatar}'`);
+    }
+
+    // Jika tidak ada kolom yang diperbarui, kembalikan error
+    if (fieldsToUpdate.length === 0) {
+        throw new Error('Tidak ada data yang diupdate.');
+    }
+
+    // Gabungkan field yang akan diupdate menjadi satu string
+    const sqlQuery = `
+        UPDATE users 
+        SET ${fieldsToUpdate.join(', ')}
+        WHERE id_users = ?;
+    `;
+
+    // Eksekusi query ke database
+    return dbPool.execute(sqlQuery, [idUser]);
 };
 
 //untuk menghapus Users

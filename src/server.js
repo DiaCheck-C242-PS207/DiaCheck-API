@@ -5,8 +5,8 @@ const express = require('express');
 const app = express();
 const userRoutes = require('./routes/users');
 const historyRoutes = require('./routes/histories');
-const articleRoutes = require('./routes/article');
-const middlewereLogRequest = require ('./middlewere/logs');
+const articlesRoutes = require('./routes/articles');
+const middlewereLogRequest = require ('./middleware/logs');
 
 
 
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 
 app.use('/users', userRoutes );
 app.use('/histories', historyRoutes);
-app.use('/articles', articleRoutes);
+app.use('/articles', articlesRoutes);
 
 
 app.listen(PORT,() =>{

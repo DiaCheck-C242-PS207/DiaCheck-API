@@ -64,5 +64,4 @@ module.exports = {
     getHistoriesByUser,
     deleteHistories,
     createNewHistory,
-
 };

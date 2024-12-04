@@ -102,8 +102,6 @@ const createHistory = async (req, res) => {
     }
 };
 
-
-
 module.exports = {
     getHistoriesByUser,
     deleteHistories,

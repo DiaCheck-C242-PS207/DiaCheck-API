@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controller/users'); 
+const upload = require('../config/upload');
 
 
 //Register user
@@ -10,16 +11,16 @@ router.post('/register', userController.registerUser);
 router.post('/login', userController.loginUser);
 
 //Read all-User
-router.get('/', userController.getAllUser);
+router.get('/getAllUser', userController.getAllUser);
 
 //get user By ID
-router.get('/:idUser', userController.getUserById);
+router.get('/getUser/:idUser', userController.getUserById);
 
 //Updated 
-router.put('/:idUser', userController.updateUser);
+router.put('/update/:idUser',upload.single('avatar'), userController.updateUser);
 
 //Delete User 
-router.delete('/:idUser', userController.deleteUser );
+router.delete('/delete/:idUser', userController.deleteUser );
 
 //logout user
 router.post('/logout', userController.logoutUser);
