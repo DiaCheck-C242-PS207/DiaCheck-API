@@ -22,14 +22,14 @@ Prasyarat:
 
 Gunakan perintah berikut:
 
-gh repo clone DiaCheck-C242-PS207/DiaCheck-API
+```gh repo clone DiaCheck-C242-PS207/DiaCheck-API```
 
 
 Alternatif jika tidak menggunakan GitHub CLI:
 
 Jika anda tidak menggunakan GitHub CLI, anda bisa menggunakan perintah git clone biasa:
 
-git clone https://github.com/DiaCheck-C242-PS207/DiaCheck-API.git 
+```git clone https://github.com/DiaCheck-C242-PS207/DiaCheck-API.git```
 
 ## Endpoint API
 
