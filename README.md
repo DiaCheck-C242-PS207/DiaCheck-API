@@ -12,7 +12,7 @@ DiaCheck API merupakan sistem backend berbasis Node.js yang dirancang untuk mend
 3. Penyimpanan File:
 	- Mendukung upload file melalui middleware yang disediakan 	oleh Multer.
 4. Pengelolaan Database:
-	-  Terintegrasi dengan Cloud SQL. 
+	-  Terintegrasi dengan Cloud SQL.
 
 ## Instalasi 
 
