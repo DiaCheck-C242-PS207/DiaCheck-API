@@ -14,40 +14,6 @@ DiaCheck API merupakan sistem backend berbasis Node.js yang dirancang untuk mend
 4. Pengelolaan Database:
 	-  Terintegrasi dengan Cloud SQL. 
 
-## Struktur Folder
-
-DiaCheck-API-main/
-├── node_modules/         ### Folder untuk dependensi Node.js (otomatis dihasilkan oleh npm)
-├── src/                  ### Folder utama untuk kode sumber API
-│   ├── config/           ### Konfigurasi aplikasi
-│   │   ├── database.js   ### Konfigurasi koneksi ke database
-│   │   └── upload.js     ### Konfigurasi untuk proses unggahan file
-│   ├── controller/       ### Logika pengelolaan data dan proses bisnis
-│   │   ├── articles.js   ### Logika CRUD untuk artikel
-│   │   ├── histories.js  ### Logika CRUD untuk riwayat pengecekan
-│   │   └── users.js      ### Logika CRUD untuk pengguna
-│   ├── middleware/       ### Middleware untuk menangani autentikasi dan proses lainnya
-│   │   ├── auth.js       ### Middleware untuk validasi token JWT
-│   │   ├── logs.js       ### Middleware untuk mencatat aktivitas API
-│   │   └── multer.js     ### Middleware untuk unggahan file
-│   ├── models/           ### Struktur dan logika database
-│   │   ├── articles.js   ### Model untuk data artikel
-│   │   ├── histories.js  ### Model untuk data riwayat pengecekan
-│   │   └── users.js      ### Model untuk data pengguna
-│   ├── routes/           ### Definisi endpoint API
-│   │   ├── articles.js   ### Rute untuk endpoint artikel
-│   │   ├── histories.js  ### Rute untuk endpoint riwayat pengecekan
-│   │   └── users.js      ### Rute untuk endpoint pengguna
-│   └── server.js         ### Entry point aplikasi
-├── uploads/              ### Folder untuk menyimpan file yang diunggah
-├── .env                  ### File konfigurasi lingkungan (environment variables)
-├── .env.example          ### Template file .env sebagai panduan
-├── .gitignore            ### Daftar file/folder yang diabaikan oleh Git
-├── app.yaml              ### Konfigurasi untuk deploy aplikasi di Google App Engine
-├── package.json          ### File konfigurasi npm, termasuk dependensi
-├── package-lock.json     ### File lock untuk dependensi
-└── README.md             ### Dokumentasi proyek
-
 ## Instalasi 
 
 Prasyarat:
@@ -87,11 +53,11 @@ Berikut adalah daftar endpoint Utama:
 	-DELETE /histories/:id - Menghapus riwayat berdasarkan ID.
 
 ## Credit
-Akhmad Nuvi Fadil Rizaldi
-Hikmal Falah Agung Maulana
-Wahyu
-Deny Firmansyach
-Errie Tri Armawan
-Aysyah Noor Shobah
-Hasan Abdu Rahman
+1. Akhmad Nuvi Fadil Rizaldi
+2. Hikmal Falah Agung Maulana
+3. Wahyu
+4. Deny Firmansyach
+5. Errie Tri Armawan
+6. Aysyah Noor Shobah
+7. Hasan Abdu Rahman
 
